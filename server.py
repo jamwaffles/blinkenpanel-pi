@@ -11,10 +11,23 @@ LED_DMA = 5
 LED_BRIGHTNESS = 32
 LED_INVERT = False
 
+num_reqs = 0
+
 class myHandler(BaseHTTPRequestHandler):
     def do_POST(self):
+        global num_reqs 
+
         if self.path == "/sns/basin":
             print "Got request to /sns/basin"
+
+            num_reqs += 1
+
+            for i in range(num_reqs):
+                strip.setPixelColor(i, Color(255, 0, 0))
+
+            strip.show()
+
+            print "%s events received" % num_reqs
 
             self.send_response(200)
             self.end_headers()
