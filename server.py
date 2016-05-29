@@ -1,3 +1,4 @@
+import math
 from neopixel import *
 
 from BaseHTTPServer import BaseHTTPRequestHandler,HTTPServer
@@ -13,6 +14,13 @@ LED_INVERT = False
 
 num_reqs = 0
 
+def wheel(pos):
+    return Color(
+        int((1 + math.sin(pos * 0.1324)) * 127),
+        int((1 + math.sin(pos * 0.1654)) * 127),
+        int((1 + math.sin(pos * 0.1)) * 127)
+    )
+
 class myHandler(BaseHTTPRequestHandler):
     def do_POST(self):
         global num_reqs 
@@ -23,7 +31,7 @@ class myHandler(BaseHTTPRequestHandler):
             num_reqs += 1
 
             for i in range(num_reqs):
-                strip.setPixelColor(i, Color(255, 0, 0))
+                strip.setPixelColor(i, wheel(i + num_reqs * 2))
 
             strip.show()
 
