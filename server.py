@@ -12,20 +12,29 @@ LED_BRIGHTNESS = 32
 LED_INVERT = False
 
 class myHandler(BaseHTTPRequestHandler):
-    def do_GET(self):
-        self.send_response(200)
-        self.send_header('Content-type','text/html')
-        self.end_headers()
+    def do_POST(self):
+        if self.path == "/sns/basin":
+            print "Got request to /sns/basin"
 
-        self.wfile.write("Hello World !")
-        return
+            self.send_response(200)
+            self.end_headers()
+            return
 
 try:
+    strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS)
+
+    strip.begin()
+
+    for i in range(strip.numPixels()):
+        strip.setPixelColor(i, Color(0, 32, 0))
+
+    strip.show()
+
     server = HTTPServer(('', PORT_NUMBER), myHandler)
     print 'Started httpserver on port ' , PORT_NUMBER
-    
+
     server.serve_forever()
 
 except KeyboardInterrupt:
-    print '^C received, shutting down the web server'
+    print ' received, shutting down the web server'
     server.socket.close()
